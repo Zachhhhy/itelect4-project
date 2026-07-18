@@ -1,4 +1,15 @@
-import type { User, Course, Submission, StringOrNumber } from "../types/index";
+import { SubmissionStatus } from "../types/index";
+import type {
+  ApiResponse,
+  Course,
+  CoursePreview,
+  PublicUser,
+  RoleCount,
+  StringOrNumber,
+  Submission,
+  User,
+  UserUpdate,
+} from "../types/index";
 
 const projectName: string = "itelect4-project";
 const currentYear: number = 2026;
@@ -64,3 +75,52 @@ function formatDate(value: string | Date): string {
 console.log(processInput("hello"));
 console.log(processInput(3.14159));
 console.log(formatDate(new Date()));
+
+function getFirst<T>(items: T[]): T | undefined {
+  return items[0];
+}
+
+const firstStudent = getFirst<User>([student]);
+
+const userUpdate: UserUpdate = {
+  name: "Juan D. Cruz",
+};
+
+const coursePreview: CoursePreview = {
+  code: course.code,
+  title: course.title,
+};
+
+const publicUser: PublicUser = {
+  id: student.id,
+  name: student.name,
+  role: student.role,
+};
+
+const roleCount: RoleCount = {
+  student: 1,
+  admin: 0,
+  instructor: 0,
+};
+
+const submission: Submission = {
+  id: 1,
+  studentId: 1,
+  courseCode: course.code,
+  repoUrl: "https://github.com/example/coursework-submission",
+  submittedAt: new Date(),
+  status: SubmissionStatus.Submitted,
+};
+
+const submissionResponse: ApiResponse<Submission> = {
+  success: true,
+  data: submission,
+  message: "Submission recorded.",
+};
+
+console.log(firstStudent);
+console.log(userUpdate);
+console.log(coursePreview);
+console.log(publicUser);
+console.log(roleCount);
+console.log(submissionResponse);
