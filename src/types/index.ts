@@ -13,6 +13,8 @@ export interface Course {
   semester: string;
 }
 
+export type ApiCourse = Course;
+
 export enum SubmissionStatus {
   Pending = "pending",
   Submitted = "submitted",
@@ -29,6 +31,12 @@ export interface Submission {
   status: SubmissionStatus;
   score?: number;
 }
+
+export type ApiSubmission = Omit<Submission, "submittedAt"> & {
+  submittedAt: string;
+};
+
+export type NewSubmission = Omit<ApiSubmission, "id">;
 
 export interface ApiResponse<T> {
   success: boolean;

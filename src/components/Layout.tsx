@@ -1,13 +1,14 @@
 import { NavLink, Outlet, useNavigate } from "react-router";
-import useToggle from "../hooks/useToggle";
 import { useAuthStore } from "../store/authStore";
+import { useUIStore } from "../store/uiStore";
 
 function Layout() {
-  const [isDarkMode, toggleDarkMode] = useToggle(false);
   const navigate = useNavigate();
   const name = useAuthStore((state) => state.name);
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
+  const isDarkMode = useUIStore((state) => state.isDarkMode);
+  const toggleDarkMode = useUIStore((state) => state.toggleDarkMode);
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-md px-3 py-2 text-sm font-semibold transition ${
