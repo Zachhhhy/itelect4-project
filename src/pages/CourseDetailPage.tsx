@@ -1,13 +1,31 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router";
+import { getCourse, getSubmissionsByCourse } from "../api/client";
 import { CourseCard } from "../components/CourseCard";
-import { mockCourses, mockSubmissions } from "../data/mockData";
 
 function CourseDetailPage() {
   const { code } = useParams<{ code: string }>();
-  const course = mockCourses.find((item) => item.code === code);
-  const submissions = mockSubmissions.filter((submission) => submission.courseCode === code);
+  const courseCode = code ?? "";
+  const courseQuery = useQuery({
+    queryKey: ["courses", courseCode],
+    queryFn: () => getCourse(courseCode),
+    enabled: courseCode.length > 0,
+  });
+  const submissionsQuery = useQuery({
+    queryKey: ["submissions", courseCode],
+    queryFn: () => getSubmissionsByCourse(courseCode),
+    enabled: courseCode.length > 0,
+  });
 
-  if (!course) {
+  if (courseQuery.isLoading || submissionsQuery.isLoading) {
+    return <div className="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">Loading course...</div>;
+  }
+
+  if (courseQuery.isError || submissionsQuery.isError) {
+    return <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">Could not load course data. Run npm run api in another terminal and try again.</div>;
+  }
+
+  if (!courseQuery.data) {
     return (
       <section className="rounded-lg border border-red-200 bg-red-50 p-5 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
         <h2 className="text-xl font-bold">Course not found</h2>
@@ -19,15 +37,17 @@ function CourseDetailPage() {
     );
   }
 
+  const submissions = submissionsQuery.data ?? [];
+
   return (
     <div>
-      <CourseCard course={course} />
+      <CourseCard course={courseQuery.data} />
       <section className="mt-6 rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <h2 className="text-lg font-bold text-gray-950 dark:text-white">Submission Activity</h2>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
           {submissions.length > 0
-            ? `${submissions.length} submission record found for ${course.code}.`
-            : `No submissions yet for ${course.code}.`}
+            ? `${submissions.length} submission record found for ${courseQuery.data.code}.`
+            : `No submissions yet for ${courseQuery.data.code}.`}
         </p>
       </section>
     </div>

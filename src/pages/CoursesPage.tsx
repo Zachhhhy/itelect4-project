@@ -1,28 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
+import { getCourses } from "../api/client";
 import { CourseCard } from "../components/CourseCard";
-import { mockCourses } from "../data/mockData";
 import usePrevious from "../hooks/usePrevious";
 import useToggle from "../hooks/useToggle";
-import type { Course } from "../types";
+import { useUIStore } from "../store/uiStore";
 
 function CoursesPage() {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [showDetails, toggleDetails] = useToggle(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchTerm = useUIStore((state) => state.courseSearchTerm);
+  const setSearchTerm = useUIStore((state) => state.setCourseSearchTerm);
   const previousSearch = usePrevious(searchTerm);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setCourses(mockCourses);
-      setIsLoading(false);
-      searchInputRef.current?.focus();
-    }, 500);
-
-    return () => window.clearTimeout(timer);
-  }, []);
+  const coursesQuery = useQuery({ queryKey: ["courses"], queryFn: getCourses });
+  const courses = coursesQuery.data ?? [];
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
   const filteredCourses = courses.filter((course) => {
@@ -32,10 +24,22 @@ function CoursesPage() {
     );
   });
 
-  if (isLoading) {
+  function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setSearchTerm(event.target.value);
+  }
+
+  if (coursesQuery.isLoading) {
     return (
       <div className="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
         Loading coursework data...
+      </div>
+    );
+  }
+
+  if (coursesQuery.isError) {
+    return (
+      <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+        Could not load courses. Run npm run api in another terminal and try again.
       </div>
     );
   }
@@ -52,7 +56,7 @@ function CoursesPage() {
             ref={searchInputRef}
             type="text"
             value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
+            onChange={handleSearchChange}
             placeholder="Search by code or title"
             className="min-w-0 flex-1 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-400 dark:focus:ring-blue-900"
           />
