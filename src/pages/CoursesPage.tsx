@@ -3,6 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { getCourses } from "../api/client";
 import { CourseCard } from "../components/CourseCard";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import usePrevious from "../hooks/usePrevious";
 import useToggle from "../hooks/useToggle";
 import { useUIStore } from "../store/uiStore";
@@ -47,26 +50,26 @@ function CoursesPage() {
   return (
     <div>
       <section className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-        <label htmlFor="course-search" className="block text-sm font-bold text-gray-800 dark:text-gray-100">
+        <Label htmlFor="course-search" className="text-foreground">
           Search courses
-        </label>
+        </Label>
         <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-          <input
+          <Input
             id="course-search"
             ref={searchInputRef}
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
             placeholder="Search by code or title"
-            className="min-w-0 flex-1 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-400 dark:focus:ring-blue-900"
+            className="flex-1"
           />
-          <button
+          <Button
             type="button"
             onClick={toggleDetails}
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700"
+            variant="outline"
           >
             {showDetails ? "Hide" : "Show"} details
-          </button>
+          </Button>
         </div>
         {previousSearch !== undefined && previousSearch !== searchTerm && (
           <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
