@@ -1,31 +1,49 @@
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 import { createSubmission, getCourses, getSubmissions } from "../api/client";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import { SubmissionBadge } from "../components/SubmissionBadge";
+import { submissionSchema } from "../schemas/submissionSchema";
 import { SubmissionStatus } from "../types";
 import type { NewSubmission } from "../types";
+import type { SubmissionFormValues } from "../schemas/submissionSchema";
 
 function SubmissionsPage() {
   const queryClient = useQueryClient();
-  const [courseCode, setCourseCode] = useState("ITELECT4");
-  const [repoUrl, setRepoUrl] = useState("https://github.com/example/new-submission");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<SubmissionFormValues>({
+    resolver: zodResolver(submissionSchema),
+    mode: "onBlur",
+    defaultValues: {
+      courseCode: "ITELECT4",
+      repoUrl: "https://github.com/example/new-submission",
+    },
+  });
   const submissionsQuery = useQuery({ queryKey: ["submissions"], queryFn: getSubmissions });
   const coursesQuery = useQuery({ queryKey: ["courses"], queryFn: getCourses });
   const addSubmission = useMutation({
     mutationFn: createSubmission,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["submissions"] });
-      setRepoUrl("");
+      reset({
+        courseCode: "ITELECT4",
+        repoUrl: "",
+      });
     },
   });
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
-
+  function onSubmit(values: SubmissionFormValues): void {
     const submission: NewSubmission = {
       studentId: 1,
-      courseCode,
-      repoUrl: repoUrl.trim(),
+      courseCode: values.courseCode,
+      repoUrl: values.repoUrl,
       submittedAt: new Date().toISOString(),
       status: SubmissionStatus.Submitted,
     };
@@ -48,14 +66,16 @@ function SubmissionsPage() {
     <div>
       <h2 className="mb-4 text-2xl font-bold text-gray-950 dark:text-white">My Submissions</h2>
 
-      <form onSubmit={handleSubmit} className="mb-6 rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+      <form onSubmit={handleSubmit(onSubmit)} className="mb-6 rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-[180px_1fr_auto] md:items-end">
-          <label className="block text-sm font-bold text-gray-800 dark:text-gray-100" htmlFor="course-code">
-            Course
+          <div>
+            <Label className="text-foreground" htmlFor="course-code">
+              Course
+            </Label>
             <select
               id="course-code"
-              value={courseCode}
-              onChange={(event) => setCourseCode(event.target.value)}
+              aria-invalid={errors.courseCode ? true : undefined}
+              {...register("courseCode")}
               className="mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-normal text-gray-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-900"
             >
               {courses.map((course) => (
@@ -64,28 +84,30 @@ function SubmissionsPage() {
                 </option>
               ))}
             </select>
-          </label>
+            {errors.courseCode && <p className="mt-2 text-sm text-red-700 dark:text-red-300">{errors.courseCode.message}</p>}
+          </div>
 
-          <label className="block text-sm font-bold text-gray-800 dark:text-gray-100" htmlFor="repo-url">
-            Repository URL
-            <input
+          <div>
+            <Label className="text-foreground" htmlFor="repo-url">
+              Repository URL
+            </Label>
+            <Input
               id="repo-url"
               type="url"
-              required
-              value={repoUrl}
-              onChange={(event) => setRepoUrl(event.target.value)}
+              aria-invalid={errors.repoUrl ? true : undefined}
+              {...register("repoUrl")}
               placeholder="https://github.com/username/repository"
-              className="mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-normal text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-400 dark:focus:ring-blue-900"
+              className="mt-2"
             />
-          </label>
+            {errors.repoUrl && <p className="mt-2 text-sm text-red-700 dark:text-red-300">{errors.repoUrl.message}</p>}
+          </div>
 
-          <button
+          <Button
             type="submit"
             disabled={addSubmission.isPending}
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-300 dark:focus:ring-offset-gray-800"
           >
             {addSubmission.isPending ? "Saving..." : "Add Submission"}
-          </button>
+          </Button>
         </div>
         {addSubmission.isError && <p className="mt-3 text-sm text-red-700 dark:text-red-300">Could not save submission.</p>}
       </form>

@@ -1,14 +1,14 @@
 {
   "learners": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Juan dela Cruz",
       "email": "juan@example.com",
       "role": "student",
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Maria Santos",
       "email": "maria@example.com",
       "role": "student",
@@ -20,24 +20,27 @@
       "code": "ITELECT4",
       "title": "IT Elective 4",
       "units": 3,
-      "semester": "1st Semester 2026-2027"
+      "semester": "1st Semester 2026-2027",
+      "id": "0wlOU-4X1r8"
     },
     {
       "code": "ITPROG3",
       "title": "Web Systems and Technologies",
       "units": 3,
-      "semester": "1st Semester 2026-2027"
+      "semester": "1st Semester 2026-2027",
+      "id": "QVJ4mYsUHE0"
     },
     {
       "code": "ITELECT5",
       "title": "Mobile Application Development",
       "units": 3,
-      "semester": "1st Semester 2026-2027"
+      "semester": "1st Semester 2026-2027",
+      "id": "wMvp-icJsQA"
     }
   ],
   "submissions": [
     {
-      "id": 1,
+      "id": "1",
       "studentId": 1,
       "courseCode": "ITELECT4",
       "repoUrl": "https://github.com/example/coursework-submission",
@@ -45,13 +48,30 @@
       "status": "submitted"
     },
     {
-      "id": 2,
+      "id": "2",
       "studentId": 1,
       "courseCode": "ITPROG3",
       "repoUrl": "https://github.com/example/web-systems-output",
       "submittedAt": "2026-08-12T00:00:00.000Z",
       "status": "graded",
       "score": 94
+    },
+    {
+      "studentId": 1,
+      "courseCode": "ITELECT4",
+      "repoUrl": "https://github.com/Zachhhhy/itelect4-project.git",
+      "submittedAt": "2026-08-24T05:55:54.166Z",
+      "status": "submitted",
+      "id": "NxMpc9vH0QE"
+    },
+    {
+      "studentId": 1,
+      "courseCode": "ITELECT4",
+      "repoUrl": "https://github.com/example/new-submission",
+      "submittedAt": "2026-08-29T14:42:18.450Z",
+      "status": "submitted",
+      "id": "chMkP4Eve6U"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
