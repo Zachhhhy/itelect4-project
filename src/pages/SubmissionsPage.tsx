@@ -41,7 +41,7 @@ function SubmissionsPage() {
 
   function onSubmit(values: SubmissionFormValues): void {
     const submission: NewSubmission = {
-      studentId: 1,
+      studentId: "1",
       courseCode: values.courseCode,
       repoUrl: values.repoUrl,
       submittedAt: new Date().toISOString(),
@@ -56,7 +56,7 @@ function SubmissionsPage() {
   }
 
   if (submissionsQuery.isError || coursesQuery.isError) {
-    return <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">Could not load submissions. Run npm run api in another terminal and try again.</div>;
+    return <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">Could not load submissions. Check your network connection and try again.</div>;
   }
 
   const submissions = submissionsQuery.data ?? [];
@@ -114,7 +114,7 @@ function SubmissionsPage() {
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2" aria-label="Submissions">
         {submissions.map((submission) => (
-          <SubmissionBadge key={submission.id} submission={{ ...submission, submittedAt: new Date(submission.submittedAt) }}>
+          <SubmissionBadge key={submission.id} submission={submission}>
             <p>Awaiting instructor review.</p>
           </SubmissionBadge>
         ))}

@@ -1,8 +1,8 @@
 import type { FC, ReactNode } from "react";
-import type { Submission } from "../types";
+import type { ApiSubmission } from "../types";
 
 export interface SubmissionBadgeProps {
-  submission: Submission;
+  submission: ApiSubmission;
   children?: ReactNode;
 }
 
@@ -23,7 +23,7 @@ export const SubmissionBadge: FC<SubmissionBadgeProps> = ({ submission, children
         Status: {submission.status}
       </p>
       <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-        Submitted: {submission.submittedAt.toLocaleDateString()}
+        Submitted: {new Date(submission.submittedAt).toLocaleDateString()}
       </p>
       <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
         Score: {submission.score ?? "Not graded yet"}
