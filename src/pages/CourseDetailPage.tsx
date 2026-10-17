@@ -22,7 +22,7 @@ function CourseDetailPage() {
   }
 
   if (courseQuery.isError || submissionsQuery.isError) {
-    return <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">Could not load course data. Run npm run api in another terminal and try again.</div>;
+    return <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">Could not load course data. Check your network connection and try again.</div>;
   }
 
   if (!courseQuery.data) {

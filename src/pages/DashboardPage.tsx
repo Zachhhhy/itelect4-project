@@ -1,24 +1,32 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { UserCard } from "../components/UserCard";
-import { getCourses, getLearners, getSubmissions } from "../api/client";
+import { getCourses, getSubmissions } from "../api/client";
+import { useAuthStore } from "../store/authStore";
 import type { User } from "../types";
 
 function DashboardPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const authName = useAuthStore((state) => state.name);
+  const authEmail = useAuthStore((state) => state.email);
+  const authRole = useAuthStore((state) => state.role);
   const coursesQuery = useQuery({ queryKey: ["courses"], queryFn: getCourses });
   const submissionsQuery = useQuery({ queryKey: ["submissions"], queryFn: getSubmissions });
-  const learnersQuery = useQuery({ queryKey: ["learners"], queryFn: getLearners });
-  const activeLearner = learnersQuery.data?.[0] ?? null;
-  const isLoading = coursesQuery.isLoading || submissionsQuery.isLoading || learnersQuery.isLoading;
-  const isError = coursesQuery.isError || submissionsQuery.isError || learnersQuery.isError;
+  const isLoading = coursesQuery.isLoading || submissionsQuery.isLoading;
+  const isError = coursesQuery.isError || submissionsQuery.isError;
+
+  // Build an active learner from the auth store (set on login)
+  const activeLearner: User | null =
+    authName && authEmail && authRole
+      ? { id: "me", name: authName, email: authEmail, role: authRole, isActive: true }
+      : null;
 
   if (isLoading) {
     return <div className="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">Loading dashboard...</div>;
   }
 
   if (isError || !activeLearner) {
-    return <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">Could not load dashboard data. Run npm run api in another terminal and try again.</div>;
+    return <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">Could not load dashboard data. Please log in and try again.</div>;
   }
 
   return (

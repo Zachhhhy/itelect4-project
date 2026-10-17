@@ -64,9 +64,14 @@ function Layout() {
                   Logout{name ? ` (${name})` : ""}
                 </button>
               ) : (
-                <NavLink to="/login" className={navLinkClass}>
-                  Login
-                </NavLink>
+                <>
+                  <NavLink to="/login" className={navLinkClass}>
+                    Login
+                  </NavLink>
+                  <NavLink to="/register" className={navLinkClass}>
+                    Register
+                  </NavLink>
+                </>
               )}
             </nav>
           </div>

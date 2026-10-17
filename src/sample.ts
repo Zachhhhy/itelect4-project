@@ -2,7 +2,7 @@ import type { User } from "./types";
 
 function getUser(id: number): User & { score: number } {
   return {
-    id: id,
+    id: String(id),
     name: "Juan dela Cruz",
     email: "juan@example.com",
     role: "student",

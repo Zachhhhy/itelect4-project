@@ -1,5 +1,5 @@
-export interface User {
-  id: string | number;
+﻿export interface User {
+  id: string;
   name: string;
   email: string;
   role: "student" | "admin" | "instructor";
@@ -22,20 +22,18 @@ export enum SubmissionStatus {
   Late = "late",
 }
 
-export interface Submission {
-  id: number;
-  studentId: number;
+// MongoDB document — _id mapped to id (string), studentId stored as string
+export interface ApiSubmission {
+  id: string;
+  studentId: string;
   courseCode: string;
   repoUrl: string;
-  submittedAt: Date;
+  submittedAt: string;
   status: SubmissionStatus;
   score?: number;
 }
 
-export type ApiSubmission = Omit<Submission, "submittedAt"> & {
-  submittedAt: string;
-};
-
+// Shape used when creating a new submission (no id yet)
 export type NewSubmission = Omit<ApiSubmission, "id">;
 
 export interface ApiResponse<T> {
@@ -44,7 +42,7 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-export type ID = number | string;
+export type ID = string;
 export type StringOrNumber = string | number;
 export type Status = "pending" | "active" | "inactive";
 

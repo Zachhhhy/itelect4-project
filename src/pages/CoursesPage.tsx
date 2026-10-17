@@ -42,7 +42,7 @@ function CoursesPage() {
   if (coursesQuery.isError) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-800 shadow-sm dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
-        Could not load courses. Run npm run api in another terminal and try again.
+        Could not load courses. Please try again.
       </div>
     );
   }
