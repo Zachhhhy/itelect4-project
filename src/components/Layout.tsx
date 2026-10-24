@@ -55,6 +55,9 @@ function Layout() {
               <NavLink to="/submissions" className={navLinkClass}>
                 Submissions
               </NavLink>
+              <NavLink to="/review" className={navLinkClass}>
+                AI Review
+              </NavLink>
               {token ? (
                 <button
                   type="button"

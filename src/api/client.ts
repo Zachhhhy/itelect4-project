@@ -1,4 +1,4 @@
-import type { ApiCourse, ApiSubmission, NewSubmission } from "../types";
+import type { AiReview, ApiCourse, ApiSubmission, NewSubmission } from "../types";
 
 // ─── Base URLs ────────────────────────────────────────────────────────────────
 // Submissions & auth go to the live Express/Vercel backend.
@@ -125,4 +125,11 @@ export function createSubmission(submission: NewSubmission): Promise<ApiSubmissi
     method: "POST",
     body: JSON.stringify(submission),
   }).then((res) => res.data);
+}
+
+export function askAi(prompt: string): Promise<AiReview> {
+  return request<AiReview>("/api/ai", {
+    method: "POST",
+    body: JSON.stringify({ prompt }),
+  });
 }
