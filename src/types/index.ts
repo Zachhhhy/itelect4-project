@@ -55,3 +55,10 @@ export type UserUpdate = Partial<User>;
 export type CoursePreview = Pick<Course, "code" | "title">;
 export type PublicUser = Omit<User, "email" | "isActive">;
 export type RoleCount = Record<User["role"], number>;
+
+export interface AiReview {
+  summary: string;
+  strengths: string[];
+  improvements: string[];
+  readiness: "ready" | "almost" | "not-yet";
+}
