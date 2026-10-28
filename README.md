@@ -133,4 +133,6 @@ This frontend is deployed on **Vercel** via GitHub integration.
 |----------|-------|
 | `VITE_API_URL` | `https://itelect4-project-backend.vercel.app` |
 
+[![CI](https://github.com/Zachhhhy/itelect4-project/actions/workflows/ci.yml/badge.svg)](https://github.com/Zachhhhy/itelect4-project/actions/workflows/ci.yml)
+
 > **Note:** Vercel does not expose variables prefixed with `VITE_` as secrets — set them as plain **Environment Variables** in your Vercel project settings.
